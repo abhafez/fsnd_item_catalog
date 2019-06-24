@@ -25,6 +25,13 @@ class FrameWork(Base):
     language_id = Column(Integer, ForeignKey('language.id'))
     language = relationship(Language)
 
+    @property
+    def serialize(self):
+        return {
+            'name': self.name,
+            'description': self.description,
+            'website': self.website,
+        }
 
 engine = create_engine('sqlite:///frameworksmenu.db')
 

@@ -1,15 +1,22 @@
 from database_setup import Base, Language, FrameWork
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
-from flask import Flask, render_template, request, redirect, url_for, flash
-app = Flask(__name__)
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 
+app = Flask(__name__)
 
 engine = create_engine('sqlite:///frameworksmenu.db')
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
+# Making an API Endpoint (GET Request)
+@app.route('/languages/<int:language_id>/frameworks/JSON')
+def languageFrameworksJSON(language_id):
+    language = session.query(Language).filter_by(id=language_id).one()
+    frameworks = session.query(FrameWork).filter_by(
+        language_id=language_id).all()
+    return jsonify(Frameworks=[i.serialize for i in frameworks])
 
 @app.route('/')
 @app.route('/languages/<int:language_id>/')
