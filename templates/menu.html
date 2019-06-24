@@ -4,7 +4,16 @@
 
   <h1>{{language.name}}</h1>
   <a href='{{url_for('newFrameWork', language_id = language.id) }}'>Add a new framework</a>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
 
+  <ul>
+    {% for message in messages %}
+    <li><strong>{{message}}</strong></li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% endwith %}
   {% for i in frameworks %}
 
   <div>
