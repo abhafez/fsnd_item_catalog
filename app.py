@@ -1,46 +1,59 @@
-from flask import Flask
+from database_setup import Base, Language, FrameWork
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine
+from flask import Flask, render_template, request, redirect, url_for
 app = Flask(__name__)
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from database_setup import Base, Language, FrameWork
 
 engine = create_engine('sqlite:///frameworksmenu.db')
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
+
 @app.route('/')
 @app.route('/languages/<int:language_id>/')
-def languageMeni(language_id):
-    language = session.query(Language).filter_by(id = language_id).one()
-    frameworks = session.query(FrameWork).filter_by(language_id = language.id)
-    output = ''
-    for i in frameworks:
-        output += i.name
-        output += '</br>'
-        output += i.description
-        output += '</br>'
-        output += i.website
-        output += '</br>'
-        output += '</br>'
-    return output
+def languageMenu(language_id):
+    language = session.query(Language).filter_by(id=language_id).one()
+    frameworks = session.query(FrameWork).filter_by(language_id=language.id)
+    return render_template('menu.html', language=language, frameworks=frameworks)
 
 # add a anew framework
-@app.route('/languages/<int:language_id>/new/')
+@app.route('/languages/<int:language_id>/new/', methods=['GET', 'POST'])
 def newFrameWork(language_id):
-    return "page to create a new framework to the language"
+    if request.method == 'POST':
+        framework = FrameWork(
+            name=request.form['name'], language_id=language_id)
+        session.add(framework)
+        session.commit()
+        return redirect(url_for('languageMenu', language_id=language_id))
+    else:
+        return render_template('newFrameWork.html', language_id=language_id)
 
 # edit a framework
-@app.route('/languages/<int:language_id>/<int:framework_id>/edit/')
+@app.route('/languages/<int:language_id>/<int:framework_id>/edit/', methods=['GET', 'POST'])
 def editFrameWork(language_id, framework_id):
-    return "let's edit"
+    editedFramework = session.query(FrameWork).filter_by(id=framework_id).one()
+    if request.method == 'POST':
+        if request.form['name']:
+            editedFramework.name = request.form['name']
+        session.add(editedFramework)
+        session.commit()
+        return redirect(url_for('languageMenu', language_id=language_id))
+    else:
+        return render_template('editFramework.html', language_id=language_id, framework_id=framework_id, item=editedFramework)
 
 # delete a framework
-@app.route('/languages/<int:language_id>/<int:framework_id>/delete/')
+@app.route('/languages/<int:language_id>/<int:framework_id>/delete/', methods=['GET', 'POST'])
 def deleteFrameWork(language_id, framework_id):
-    return "let's delete"
-
+    framework_to_delete = session.query(
+        FrameWork).filter_by(id=framework_id).one()
+    if request.method == 'POST':
+        session.delete(framework_to_delete)
+        session.commit()
+        return redirect(url_for('languageMenu', language_id=language_id))
+    else:
+        return render_template('deleteFramework.html', item=framework_to_delete)
 
 
 if __name__ == '__main__':

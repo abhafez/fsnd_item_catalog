@@ -1,0 +1,14 @@
+<html>
+
+<body>
+  <form action="{{url_for('editFrameWork', language_id = language_id, framework_id=item.id)}}" method='POST'>
+
+    <p>Name:</p>
+    <input type='text' size='30' name='name' placeholder='{{item.name}}'>
+
+    <input type='submit' value='Edit'>
+  </form>
+  <a href='{{url_for('languageMenu', language_id= item.language_id)}}'>Cancel</a>
+</body>
+
+</html>
