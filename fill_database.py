@@ -82,7 +82,7 @@ session.commit()
 
 # FW-ROR
 ror = FrameWork(name="Ruby on Rails",
-                description="Imagine what you could build if you learned Ruby on Rails…",
+                description="Imagine what you could build if you learned Ruby on Rails",
                 website="https://rubyonrails.org/",
                 language=ruby
                 )
