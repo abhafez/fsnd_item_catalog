@@ -13,6 +13,12 @@ class Language(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
+    @property
+    def serialize(self):
+        return {
+            'name': self.name,
+            'id': self.id,
+        }
 
 
 class FrameWork(Base):
@@ -28,10 +34,12 @@ class FrameWork(Base):
     @property
     def serialize(self):
         return {
+            'id': self.id,
             'name': self.name,
             'description': self.description,
             'website': self.website,
         }
+
 
 engine = create_engine('sqlite:///frameworksmenu.db')
 

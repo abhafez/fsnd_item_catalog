@@ -11,12 +11,16 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 # Making an API Endpoint (GET Request)
-@app.route('/languages/<int:language_id>/frameworks/JSON')
+@app.route('/languages/<int:language_id>/framework/JSON')
 def languageFrameworksJSON(language_id):
-    language = session.query(Language).filter_by(id=language_id).one()
     frameworks = session.query(FrameWork).filter_by(
         language_id=language_id).all()
     return jsonify(Frameworks=[i.serialize for i in frameworks])
+
+@app.route('/languages/<int:language_id>/framework/<int:framework_id>/JSON')
+def FrameworkJSON(language_id, framework_id):
+    framework = session.query(FrameWork).filter_by(id=framework_id).one()
+    return jsonify(Framework=[framework.serialize])
 
 @app.route('/')
 @app.route('/languages/<int:language_id>/')
