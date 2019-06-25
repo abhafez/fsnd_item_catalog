@@ -7,20 +7,33 @@
     integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
   <script src="{{ url_for('static', filename='semantic/dist/semantic.min.js')}}"></script>
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+  <link rel="stylesheet"
+    href="https://cdn.rawgit.com/konpa/devicon/df6431e323547add1b4cf45992913f15286456d3/devicon.min.css">
 </head>
+
+
 
 <body>
   <div class="ui hidden divider"></div>
   <div class="ui hidden divider"></div>
   <div class="ui piled segment">
-    <form action="{{url_for('editFrameWork', language_id = language_id, framework_id=item.id)}}" method='POST'>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+      {% for message in messages %}
+      <li><strong>{{message}}</strong></li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+    {% for i in languages %}
 
-      <p>Name:</p>
-      <input type='text' size='30' name='name' placeholder='{{item.name}}'>
-
-      <input type='submit' value='Edit'>
-    </form>
-    <a href='{{url_for('languageMenu', language_id= item.language_id)}}'>Cancel</a>
+    <div>
+      <a href='{{url_for('languageFrameworksMenu', language_id = i.id)}}'>
+        <h1><i class={{i.icon}}></i>{{i.name}}</h1>
+      </a>
+    </div>
+    {% endfor %}
   </div>
 </body>
 

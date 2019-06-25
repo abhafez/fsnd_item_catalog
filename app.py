@@ -157,7 +157,7 @@ def gdisconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
-# Making an API Endpoint (GET Request)
+# Making (JSON)
 @app.route('/languages/<int:language_id>/framework/JSON')
 def languageFrameworksJSON(language_id):
     frameworks = session.query(FrameWork).filter_by(
@@ -181,9 +181,9 @@ def languageMenu():
     languages = session.query(Language).order_by((Language.name))
     # frameworks = session.query(FrameWork).filter_by(language_id=language.id)
     if 'username' not in login_session:
-        return render_template('publicProgrammingLanguagesMenu.html', languages=languages)
+        return render_template('public-lang-menu.html', languages=languages)
     else:
-        return render_template('programmingLanguagesMenu.html', languages=languages)
+        return render_template('private-lang-menu.html', languages=languages)
 
 
 @app.route('/languages/<int:language_id>/')

@@ -1,41 +1,50 @@
 <html>
-<link rel="stylesheet"
-  href="https://cdn.rawgit.com/konpa/devicon/df6431e323547add1b4cf45992913f15286456d3/devicon.min.css">
+
+<head>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css')}}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='semantic.min.css')}}">
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+  <script src="{{ url_for('static', filename='semantic/dist/semantic.min.js')}}"></script>
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+  <link rel="stylesheet"
+    href="https://cdn.rawgit.com/konpa/devicon/df6431e323547add1b4cf45992913f15286456d3/devicon.min.css">
+</head>
 
 <body>
+  <div class="ui hidden divider"></div>
+  <div class="ui hidden divider"></div>
+  <div class="ui piled segment">
+    <h1><i class={{language.icon}}></i>{{language.name}}</h1>
+    <a href='{{url_for('newFrameWork', language_id = language.id) }}'>Add a new framework</a>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
 
-  <h1><i class={{language.icon}}></i>{{language.name}}</h1>
-  <a href='{{url_for('newFrameWork', language_id = language.id) }}'>Add a new framework</a>
-  {% with messages = get_flashed_messages() %}
-  {% if messages %}
-
-  <ul>
-    {% for message in messages %}
-    <li><strong>{{message}}</strong></li>
-    {% endfor %}
-  </ul>
-  {% endif %}
-  {% endwith %}
-  {% for i in frameworks %}
-
-  <div>
+    <ul>
+      {% for message in messages %}
+      <li><strong>{{message}}</strong></li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+    {% for i in frameworks %}
 
     <div>
-      <p><i class={{i.icon}}></i>{{i.name}}</p>
+
+      <div>
+        <h3><i class={{i.icon}}></i>{{i.name}}</h3>
+      </div>
+
+      <p>{{i.description}}</p>
+      <p> {{i.website}} </p>
+
+      </br>
+      <a href='{{url_for('editFrameWork', language_id=language.id, framework_id=i.id) }}'>Edit</a>
+      <a href='{{url_for('deleteFrameWork', language_id=language.id, framework_id=i.id) }}'>Delete</a>
+      </br>
     </div>
-
-    <p>{{i.description}}</p>
-    <p> {{i.website}} </p>
-
-    </br>
-    <a href='{{url_for('editFrameWork', language_id=language.id, framework_id=i.id) }}'>Edit</a>
-    <a href='{{url_for('deleteFrameWork', language_id=language.id, framework_id=i.id) }}'>Delete</a>
-    </br>
-
+    {% endfor %}
   </div>
-
-
-  {% endfor %}
 </body>
 
 </html>
