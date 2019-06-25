@@ -5,16 +5,25 @@
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='semantic.min.css')}}">
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"
     integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-  <script src="{{ url_for('static', filename='semantic/dist/semantic.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='semantic.min.js')}}"></script>
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
   <link rel="stylesheet"
     href="https://cdn.rawgit.com/konpa/devicon/df6431e323547add1b4cf45992913f15286456d3/devicon.min.css">
 </head>
 
 <body>
-  <div class="ui hidden divider"></div>
-  <div class="ui hidden divider"></div>
-  <div class="ui piled segment">
+  <div class="ui stackable menu">
+    <div class="item">
+      <img width="200" src="https://www.shareicon.net/download/2015/09/10/98905_fork.svg">
+    </div>
+    <a class="item">Home</a>
+    <a class="item"></a>
+    <div class="right menu">
+      <a class="item">Sign-in</a>
+    </div>
+  </div>
+  <div class="ui container">
+    <h1 class="ui header">NOTE: I should be {public} MENU ??</h1>
     <h1 class="ui header"><i class={{language.icon}}></i>{{language.name}}</h1>
     {% with messages = get_flashed_messages() %}
     {% if messages %}
@@ -25,16 +34,29 @@
     </ul>
     {% endif %}
     {% endwith %}
-    {% for i in frameworks %}
-    <div>
-      <div>
-        <p><i class={{i.icon}}></i>{{i.name}}</p>
+    <div class="ui grid padded">
+      {% for i in frameworks %}
+      <div class="eight wide row">
+        <div class="ui cards">
+          <div class="card">
+            <div class="content">
+              <i class={{i.icon}}></i>
+              <div class="header">
+                {{i.name}}
+              </div>
+              <div class="meta">
+                {{i.name}}
+              </div>
+              <div class="description">
+                {{i.description}}
+              </div>
+              <div>{{i.website}}</div>
+            </div>
+          </div>
+        </div>
       </div>
-      <p>{{i.description}}</p>
-      <p> {{i.website}} </p>
-      </br>
+      {% endfor %}
     </div>
-    {% endfor %}
   </div>
 </body>
 
