@@ -18,7 +18,8 @@ CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Frameworks List Application"
 
-engine = create_engine('sqlite:///frameworksmenuwithusersandicons.db', connect_args={'check_same_thread': False})
+engine = create_engine('sqlite:///frameworksmenuwithusersandicons.db',
+                       connect_args={'check_same_thread': False})
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
@@ -174,18 +175,27 @@ def FrameworkJSON(language_id, framework_id):
 def hello():
     return redirect("/languages/", code=302)
 
+
 @app.route('/languages/')
 def languageMenu():
     languages = session.query(Language).order_by((Language.name))
     # frameworks = session.query(FrameWork).filter_by(language_id=language.id)
-    return render_template('programmingLanguagesMenu.html', languages=languages)
+    if 'username' not in login_session:
+        return render_template('publicProgrammingLanguagesMenu.html', languages=languages)
+    else:
+        return render_template('programmingLanguagesMenu.html', languages=languages)
+
 
 @app.route('/languages/<int:language_id>/')
 @app.route('/languages/<int:language_id>/frameworks')
 def languageFrameworksMenu(language_id):
     language = session.query(Language).filter_by(id=language_id).one()
     frameworks = session.query(FrameWork).filter_by(language_id=language.id)
-    return render_template('languageFrameworksMenu.html', language=language, frameworks=frameworks)
+    creator = getUserInfo(language.user_id)
+    if 'username' not in login_session or creator.id != login_session['user_id']:
+        return render_template('publicMenu.html', language=language, frameworks=frameworks, creator=creator)
+    else:
+        return render_template('languageFrameworksMenu.html', language=language, frameworks=frameworks, creator=creator)
 
 # add a anew framework
 @app.route('/languages/<int:language_id>/new/', methods=['GET', 'POST'])

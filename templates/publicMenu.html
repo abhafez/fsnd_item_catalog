@@ -1,0 +1,37 @@
+<html>
+<link rel="stylesheet"
+  href="https://cdn.rawgit.com/konpa/devicon/df6431e323547add1b4cf45992913f15286456d3/devicon.min.css">
+
+<body>
+
+  <h1><i class={{language.icon}}></i>{{language.name}}</h1>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+
+  <ul>
+    {% for message in messages %}
+    <li><strong>{{message}}</strong></li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% endwith %}
+  {% for i in frameworks %}
+
+  <div>
+
+    <div>
+      <p><i class={{i.icon}}></i>{{i.name}}</p>
+    </div>
+
+    <p>{{i.description}}</p>
+    <p> {{i.website}} </p>
+
+    </br>
+
+  </div>
+
+
+  {% endfor %}
+</body>
+
+</html>
