@@ -8,11 +8,23 @@ from sqlalchemy import create_engine
 Base = declarative_base()
 
 
+class User(Base):
+    __tablename__ = 'user'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(250), nullable=False)
+    email = Column(String(250), nullable=False)
+    picture = Column(String(250))
+
+
 class Language(Base):
     __tablename__ = 'language'
 
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    user = relationship(User)
+
     @property
     def serialize(self):
         return {
@@ -30,6 +42,8 @@ class FrameWork(Base):
     website = Column(String(250))
     language_id = Column(Integer, ForeignKey('language.id'))
     language = relationship(Language)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    user = relationship(User)
 
     @property
     def serialize(self):
@@ -41,7 +55,8 @@ class FrameWork(Base):
         }
 
 
-engine = create_engine('sqlite:///frameworksmenu.db')
+# engine = create_engine('sqlite:///frameworksmenu.db')
+engine = create_engine('sqlite:///frameworksmenuwithusers.db')
 
 
 Base.metadata.create_all(engine)

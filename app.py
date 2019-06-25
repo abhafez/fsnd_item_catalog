@@ -1,4 +1,4 @@
-from database_setup import Base, Language, FrameWork
+from database_setup import Base, Language, FrameWork, User
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, make_response
@@ -118,6 +118,39 @@ def gconnect():
     print("done!")
     return output
 
+
+@app.route('/gdisconnect')
+def gdisconnect():
+    access_token = login_session.get('access_token')
+    if access_token is None:
+        print('Access Token is None')
+        response = make_response(json.dumps(
+            'Current user not connected.'), 401)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+    print('In gdisconnect access token is %s', access_token)
+    print('User name is: ')
+    print(login_session['username'])
+    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']
+    h = httplib2.Http()
+    result = h.request(url, 'GET')[0]
+    print('result is ')
+    print(result)
+    if result['status'] == '200':
+        del login_session['access_token']
+        del login_session['gplus_id']
+        del login_session['username']
+        del login_session['email']
+        del login_session['picture']
+        response = make_response(json.dumps('Successfully disconnected.'), 200)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+    else:
+        response = make_response(json.dumps(
+            'Failed to revoke token for given user.', 400))
+        response.headers['Content-Type'] = 'application/json'
+        return response
+
 # Making an API Endpoint (GET Request)
 @app.route('/languages/<int:language_id>/framework/JSON')
 def languageFrameworksJSON(language_id):
@@ -142,6 +175,8 @@ def languageMenu(language_id):
 # add a anew framework
 @app.route('/languages/<int:language_id>/new/', methods=['GET', 'POST'])
 def newFrameWork(language_id):
+    if 'username' not in login_session:
+        return redirect('/login')
     if request.method == 'POST':
         framework = FrameWork(
             name=request.form['name'], language_id=language_id)
@@ -156,6 +191,8 @@ def newFrameWork(language_id):
 @app.route('/languages/<int:language_id>/<int:framework_id>/edit/', methods=['GET', 'POST'])
 def editFrameWork(language_id, framework_id):
     editedFramework = session.query(FrameWork).filter_by(id=framework_id).one()
+    if 'username' not in login_session:
+        return redirect('/login')
     if request.method == 'POST':
         if request.form['name']:
             editedFramework.name = request.form['name']
@@ -171,6 +208,8 @@ def editFrameWork(language_id, framework_id):
 def deleteFrameWork(language_id, framework_id):
     framework_to_delete = session.query(
         FrameWork).filter_by(id=framework_id).one()
+    if 'username' not in login_session:
+        return redirect('/login')
     if request.method == 'POST':
         session.delete(framework_to_delete)
         session.commit()
