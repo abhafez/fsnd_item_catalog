@@ -5,7 +5,7 @@
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='semantic.min.css')}}">
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"
     integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-  <script src="{{ url_for('static', filename='semantic/dist/semantic.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='semantic.min.js')}}"></script>
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
 </head>
 
@@ -16,11 +16,11 @@
     <form action="{{url_for('editFrameWork', language_id = language_id, framework_id=item.id)}}" method='POST'>
 
       <p>Name:</p>
-      <input type='text' size='30' name='name' placeholder='{{item.name}}'>
+      <input type='text' size='30' name='name' placeholder="{{item.name}}">
 
       <input type='submit' value='Edit'>
     </form>
-    <a href='{{url_for('languageMenu', language_id= item.language_id)}}'>Cancel</a>
+    <a href="{{url_for('languageMenu', language_id= item.language_id)}}">Cancel</a>
   </div>
 </body>
 

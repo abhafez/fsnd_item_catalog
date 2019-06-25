@@ -59,6 +59,6 @@ class FrameWork(Base):
 
 # engine = create_engine('sqlite:///frameworksmenu.db')
 # engine = create_engine('sqlite:///frameworksmenuwithusers.db')
-engine = create_engine('sqlite:///frameworksmenuwithusersandicons.db')
+engine = create_engine('sqlite:///lang-db.db')
 
 Base.metadata.create_all(engine)

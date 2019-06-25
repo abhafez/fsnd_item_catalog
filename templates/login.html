@@ -3,7 +3,7 @@
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='semantic.min.css')}}">
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"
     integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-  <script src="{{ url_for('static', filename='semantic/dist/semantic.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='semantic.min.js')}}"></script>
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
   <!Updated Google Sign-In-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -18,41 +18,69 @@
       }
     </script>
 </head>
-<!--  Step 2: In the <body> tag, add the below button and div -->
-<div class="ui hidden divider"></div>
-<div class="ui hidden divider"></div>
-<div class="ui piled segment">
-  <button id="signinButton">Google Signin</button>
-  <div id="result"></div>
-</div>
-<!--  Step 3: Add the below script before the ending </body> tag -->
-<script>
-  $('#signinButton').click(function () {
-    function signInCallback(authResult) {
-      if (authResult['code']) {
-        $('#signinButton').attr('style', 'display: none');
-        $.ajax({
-          type: 'POST',
-          url: '/gconnect?state={{STATE}}',
-          headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-          },
-          contentType: 'application/octet-stream; charset=utf-8',
-          success: function (result) {
-            $('#result').html('Login Successful!</br>' + result + '</br>Redirecting...')
-            setTimeout(function () {
-              window.location.href = "/";
-            }, 4000);
-          },
-          processData: false,
-          data: authResult['code']
-        });
-      } else {
-        // handle error
-        console.log('There was an error: ' + authResult['error']);
-        $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+
+<body>
+  <header>
+    <div class="ui stackable menu">
+      <div class="item">
+        <img width="200" src="https://www.shareicon.net/download/2015/09/10/98905_fork.svg">
+      </div>
+      <a class="item" href="{{url_for('hello')}}">Home</a>
+      <div class="right menu">
+        {% if login_session.username %}
+        <div class="item">
+          Welcome, {{login_session.username}}
+        </div>
+        <a class="item" href="{{url_for('gdisconnect')}}">Logout</a>
+        {% else %}
+        <a class="item" href="{{url_for('showLogin')}}">Login</a>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+  <main>
+    <div class="ui container">
+      <div class="divider hidden"></div>
+      {% if login_session.username %}
+      <h1>You're Already in <a class="item" href="{{url_for('gdisconnect')}}">Logout ?</a></h1>
+      {% else %}
+      <div class="ui basic segment">
+        <button id="signinButton" class="ui button"> <i class="google icon"></i>Google Signin</button>
+        <div id="result"></div>
+      </div>
+      {% endif %}
+    </div>
+  </main>
+  </div>
+  <!--  Step 3: Add the below script before the ending </body> tag -->
+  <script>
+    $('#signinButton').click(function () {
+      function signInCallback(authResult) {
+        if (authResult['code']) {
+          $('#signinButton').attr('style', 'display: none');
+          $.ajax({
+            type: 'POST',
+            url: '/gconnect?state={{STATE}}',
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest'
+            },
+            contentType: 'application/octet-stream; charset=utf-8',
+            success: function (result) {
+              $('#result').html('Login Successful!</br>' + result + '</br>Redirecting...')
+              setTimeout(function () {
+                window.location.href = "/";
+              }, 2000);
+            },
+            processData: false,
+            data: authResult['code']
+          });
+        } else {
+          // handle error
+          console.log('There was an error: ' + authResult['error']);
+          $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+        }
       }
-    }
-    auth2.grantOfflineAccess().then(signInCallback);
-  });
-</script>
+      auth2.grantOfflineAccess().then(signInCallback);
+    });
+  </script>
+</body>

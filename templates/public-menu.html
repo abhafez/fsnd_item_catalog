@@ -11,12 +11,13 @@
     href="https://cdn.rawgit.com/konpa/devicon/df6431e323547add1b4cf45992913f15286456d3/devicon.min.css">
 </head>
 
-
-
 <body>
   <div class="ui hidden divider"></div>
   <div class="ui hidden divider"></div>
+  // NOTE:
+  <h1 class="ui header">I should be {public} specific lang</h1>
   <div class="ui piled segment">
+    <h1 class="ui header"><i class={{language.icon}}></i>{{language.name}}</h1>
     {% with messages = get_flashed_messages() %}
     {% if messages %}
     <ul>
@@ -26,15 +27,26 @@
     </ul>
     {% endif %}
     {% endwith %}
-    {% for i in languages %}
-
-    <div>
-      <a href="{{url_for('languageFrameworksMenu', language_id = i.id)}}">
-        <h1><i class={{i.icon}}></i>{{i.name}}</h1>
-      </a>
+    {% for i in frameworks %}
+    <div class="ui cards">
+      <div class="card">
+        <div class="content">
+          <i class={{i.icon}}></i>
+          <div class="header">
+            {{i.name}}
+          </div>
+          <div class="meta">
+            {{i.name}}
+          </div>
+          <div class="description">
+            {{i.description}}
+          </div>
+          <div>{{i.website}}</div>
+        </div>
+        {% endfor %}
+      </div>
     </div>
-    {% endfor %}
-  </div>
+
 </body>
 
 </html>

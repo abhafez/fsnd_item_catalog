@@ -18,7 +18,7 @@ CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Frameworks List Application"
 
-engine = create_engine('sqlite:///frameworksmenuwithusersandicons.db',
+engine = create_engine('sqlite:///lang-db.db',
                        connect_args={'check_same_thread': False})
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
@@ -31,7 +31,7 @@ def showLogin():
                     for x in range(32))
     login_session['state'] = state
     # return "The current session state is %s" % login_session['state']
-    return render_template('login.html', STATE=state)
+    return render_template('login.html', STATE=state, login_session=login_session)
 
 
 @app.route('/gconnect', methods=['POST'])
@@ -41,7 +41,6 @@ def gconnect():
         response = make_response(json.dumps('Invalid state parameter.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
-    # Obtain authorization code
     code = request.data
 
     try:
@@ -119,13 +118,13 @@ def gconnect():
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += ' " style = "width: 100px; height: 100px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
     flash("you are now logged in as %s" % login_session['username'])
     print("done!")
     return output
 
 
-@app.route('/gdisconnect')
+@app.route('/logout')
 def gdisconnect():
     access_token = login_session.get('access_token')
     if access_token is None:
@@ -157,19 +156,6 @@ def gdisconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
-# Making (JSON)
-@app.route('/languages/<int:language_id>/framework/JSON')
-def languageFrameworksJSON(language_id):
-    frameworks = session.query(FrameWork).filter_by(
-        language_id=language_id).all()
-    return jsonify(Frameworks=[i.serialize for i in frameworks])
-
-
-@app.route('/languages/<int:language_id>/framework/<int:framework_id>/JSON')
-def FrameworkJSON(language_id, framework_id):
-    framework = session.query(FrameWork).filter_by(id=framework_id).one()
-    return jsonify(Framework=[framework.serialize])
-
 
 @app.route('/')
 def hello():
@@ -193,7 +179,7 @@ def languageFrameworksMenu(language_id):
     frameworks = session.query(FrameWork).filter_by(language_id=language.id)
     creator = getUserInfo(language.user_id)
     if 'username' not in login_session or creator.id != login_session['user_id']:
-        return render_template('publicMenu.html', language=language, frameworks=frameworks, creator=creator)
+        return render_template('publicMenu.html', language=language, frameworks=frameworks, creator=creator,  login_session=login_session)
     else:
         return render_template('languageFrameworksMenu.html', language=language, frameworks=frameworks, creator=creator)
 
@@ -224,7 +210,7 @@ def editFrameWork(language_id, framework_id):
         session.add(editedFramework)
         session.commit()
         flash("New FrameWork has been Edited")
-        return redirect(url_for('languageMenu', language_id=language_id))
+        return redirect(url_for('languageMenu', language_id=language_id, login_session=login_session))
     else:
         return render_template('editFramework.html', language_id=language_id, framework_id=framework_id, item=editedFramework)
 
@@ -264,6 +250,20 @@ def getUserID(email):
         return user.id
     except:
         return None
+
+
+# Making (JSON)
+@app.route('/languages/<int:language_id>/framework/JSON')
+def languageFrameworksJSON(language_id):
+    frameworks = session.query(FrameWork).filter_by(
+        language_id=language_id).all()
+    return jsonify(Frameworks=[i.serialize for i in frameworks])
+
+
+@app.route('/languages/<int:language_id>/framework/<int:framework_id>/JSON')
+def FrameworkJSON(language_id, framework_id):
+    framework = session.query(FrameWork).filter_by(id=framework_id).one()
+    return jsonify(Framework=[framework.serialize])
 
 
 if __name__ == '__main__':

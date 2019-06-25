@@ -12,52 +12,62 @@
 </head>
 
 <body>
-  <div class="ui stackable menu">
-    <div class="item">
-      <img width="200" src="https://www.shareicon.net/download/2015/09/10/98905_fork.svg">
+  <header>
+    <div class="ui stackable menu">
+      <div class="item">
+        <img width="200" src="https://www.shareicon.net/download/2015/09/10/98905_fork.svg">
+      </div>
+      <a class="item" href="{{url_for('hello')}}">Home</a>
+      <div class="right menu">
+        {% if login_session.username %}
+        <div class="item">
+          Welcome, {{login_session.username}}
+        </div>
+        <a class="item" href="{{url_for('gdisconnect')}}">Logout</a>
+        {% else %}
+        <a class="item" href="{{url_for('showLogin')}}">Login</a>
+        {% endif %}
+      </div>
     </div>
-    <a class="item">Home</a>
-    <a class="item"></a>
-    <div class="right menu">
-      <a class="item">Sign-in</a>
-    </div>
-  </div>
-  <div class="ui container">
-    <h1 class="ui header">NOTE: I should be {public} MENU ??</h1>
-    <h1 class="ui header"><i class={{language.icon}}></i>{{language.name}}</h1>
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <ul>
-      {% for message in messages %}
-      <li><strong>{{message}}</strong></li>
-      {% endfor %}
-    </ul>
-    {% endif %}
-    {% endwith %}
-    <div class="ui grid padded">
-      {% for i in frameworks %}
-      <div class="eight wide row">
-        <div class="ui cards">
-          <div class="card">
-            <div class="content">
-              <i class={{i.icon}}></i>
-              <div class="header">
-                {{i.name}}
+  </header>
+  <main>
+    <div class="ui container">
+      <h1 class="ui header">NOTE: I should be {public} MENU ??</h1><!-- FIXME: Delete this line before submit -->
+      <h1 class="ui header"><i class={{language.icon}}></i> &nbsp; {{language.name}} frameworks and libraries</h1>
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+      <ul>
+        {% for message in messages %}
+        <li><strong>{{message}}</strong></li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      {% endwith %}
+      <div class="ui grid padded">
+        {% for i in frameworks %}
+        <div class="eight wide row">
+          <div class="ui cards">
+            <div class="card">
+              <div class="content">
+                <div class="header">
+                  <i class={{i.icon}}></i>
+                  &nbsp;{{i.name}}
+                </div>
+                <div class="meta">
+                  {{i.name}}
+                </div>
+                <div class="description">
+                  {{i.description}}
+                </div>
+                <div>{{i.website}}</div>
               </div>
-              <div class="meta">
-                {{i.name}}
-              </div>
-              <div class="description">
-                {{i.description}}
-              </div>
-              <div>{{i.website}}</div>
             </div>
           </div>
         </div>
+        {% endfor %}
       </div>
-      {% endfor %}
     </div>
-  </div>
+  </main>
 </body>
 
 </html>

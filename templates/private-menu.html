@@ -5,7 +5,7 @@
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='semantic.min.css')}}">
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"
     integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-  <script src="{{ url_for('static', filename='semantic/dist/semantic.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='semantic.min.js')}}"></script>
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
   <link rel="stylesheet"
     href="https://cdn.rawgit.com/konpa/devicon/df6431e323547add1b4cf45992913f15286456d3/devicon.min.css">
@@ -14,6 +14,9 @@
 
 <body>
   <div class="ui hidden divider"></div>
+  <!-- NOTE: -->
+  <h1 class="ui header">I should be {private} lang-menu</h1>
+  <div>I should be {private} menu</div>
   <div class="ui hidden divider"></div>
   <div class="ui piled segment">
     {% with messages = get_flashed_messages() %}
@@ -26,9 +29,8 @@
     {% endif %}
     {% endwith %}
     {% for i in languages %}
-
     <div>
-      <a href='{{url_for('languageFrameworksMenu', language_id = i.id)}}'>
+      <a href="{{url_for('languageFrameworksMenu', language_id = i.id)}}">
         <h1><i class={{i.icon}}></i>{{i.name}}</h1>
       </a>
     </div>
