@@ -4,7 +4,8 @@ from sqlalchemy.orm import sessionmaker
 from database_setup import Language, Base, FrameWork, User
 
 # engine = create_engine('sqlite:///frameworksmenu.db')
-engine = create_engine('sqlite:///frameworksmenuwithusers.db')
+# engine = create_engine('sqlite:///frameworksmenuwithusers.db')
+engine = create_engine('sqlite:///frameworksmenuwithusersandicons.db')
 
 Base.metadata.bind = engine
 
@@ -13,7 +14,7 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 # Lang-Python
-python = Language(user_id=2, name="Python")
+python = Language(user_id=2, name="Python", icon="devicon-python-plain-wordmark colored")
 
 session.add(python)
 session.commit()
@@ -41,7 +42,8 @@ django = FrameWork(user_id=1,
                    name="Django",
                    description="Django makes it easier to build better Web apps more quickly and with less code.",
                    website="https://www.djangoproject.com/",
-                   language=python
+                   language=python,
+                   icon="devicon-django-plain colored"
                    )
 
 session.add(django)
@@ -49,7 +51,7 @@ session.commit()
 # End of python frameworks
 
 # Lang-JavaScript
-javascript = Language(user_id=1, name="JavaScript")
+javascript = Language(user_id=1, name="JavaScript", icon="devicon-javascript-plain colored")
 
 session.add(javascript)
 session.commit()
@@ -59,7 +61,8 @@ react = FrameWork(user_id=1,
                   name="React",
                   description="A JavaScript library for building user interfaces",
                   website="https://reactjs.org/",
-                  language=javascript
+                  language=javascript,
+                  icon="devicon-react-original colored"
                   )
 
 session.add(react)
@@ -70,7 +73,8 @@ angular = FrameWork(user_id=1,
                     name="Angular",
                     description="Build features quickly with simple, declarative templates. Extend the template language with your own components and use a wide array of existing components. Get immediate Angular-specific help and feedback with nearly every IDE and editor. All this comes together so you can focus on building amazing apps rather than trying to make the code work.",
                     website="https://angular.io/",
-                    language=javascript
+                    language=javascript,
+                    icon="devicon-angularjs-plain colored"
                     )
 
 session.add(angular)
@@ -88,7 +92,7 @@ session.add(vueJs)
 session.commit()
 
 # Lang-Ruby
-ruby = Language(user_id=1, name="Ruby")
+ruby = Language(user_id=1, name="Ruby", icon="devicon-ruby-plain colored")
 
 session.add(ruby)
 session.commit()
@@ -116,7 +120,7 @@ session.add(sinatra)
 session.commit()
 
 # Lang-Elixir
-elixir = Language(user_id=1, name="Elixir")
+elixir = Language(user_id=1, name="Elixir", icon="devicon-erlang-plain colored")
 
 session.add(elixir)
 session.commit()

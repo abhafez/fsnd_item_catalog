@@ -18,7 +18,7 @@ CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Frameworks List Application"
 
-engine = create_engine('sqlite:///frameworksmenuwithusers.db')
+engine = create_engine('sqlite:///frameworksmenuwithusersandicons.db', connect_args={'check_same_thread': False})
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
@@ -171,11 +171,14 @@ def FrameworkJSON(language_id, framework_id):
 
 
 @app.route('/')
-@app.route('/languages/<int:language_id>/')
-def languageMenu(language_id):
-    language = session.query(Language).filter_by(id=language_id).one()
-    frameworks = session.query(FrameWork).filter_by(language_id=language.id)
-    return render_template('menu.html', language=language, frameworks=frameworks)
+def hello():
+    return redirect("/languages/", code=302)
+
+@app.route('/languages/')
+def languageMenu():
+    languages = session.query(Language).order_by((Language.name))
+    # frameworks = session.query(FrameWork).filter_by(language_id=language.id)
+    return render_template('programmingLanguagesMenu.html', languages=languages)
 
 # add a anew framework
 @app.route('/languages/<int:language_id>/new/', methods=['GET', 'POST'])
