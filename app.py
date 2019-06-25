@@ -180,6 +180,13 @@ def languageMenu():
     # frameworks = session.query(FrameWork).filter_by(language_id=language.id)
     return render_template('programmingLanguagesMenu.html', languages=languages)
 
+@app.route('/languages/<int:language_id>/')
+@app.route('/languages/<int:language_id>/frameworks')
+def languageFrameworksMenu(language_id):
+    language = session.query(Language).filter_by(id=language_id).one()
+    frameworks = session.query(FrameWork).filter_by(language_id=language.id)
+    return render_template('languageFrameworksMenu.html', language=language, frameworks=frameworks)
+
 # add a anew framework
 @app.route('/languages/<int:language_id>/new/', methods=['GET', 'POST'])
 def newFrameWork(language_id):

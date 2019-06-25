@@ -1,0 +1,41 @@
+<html>
+<link rel="stylesheet"
+  href="https://cdn.rawgit.com/konpa/devicon/df6431e323547add1b4cf45992913f15286456d3/devicon.min.css">
+
+<body>
+
+  <h1><i class={{language.icon}}></i>{{language.name}}</h1>
+  <a href='{{url_for('newFrameWork', language_id = language.id) }}'>Add a new framework</a>
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+
+  <ul>
+    {% for message in messages %}
+    <li><strong>{{message}}</strong></li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% endwith %}
+  {% for i in frameworks %}
+
+  <div>
+
+    <div>
+      <p><i class={{i.icon}}></i>{{i.name}}</p>
+    </div>
+
+    <p>{{i.description}}</p>
+    <p> {{i.website}} </p>
+
+    </br>
+    <a href='{{url_for('editFrameWork', language_id=language.id, framework_id=i.id) }}'>Edit</a>
+    <a href='{{url_for('deleteFrameWork', language_id=language.id, framework_id=i.id) }}'>Delete</a>
+    </br>
+
+  </div>
+
+
+  {% endfor %}
+</body>
+
+</html>

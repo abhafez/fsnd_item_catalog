@@ -85,7 +85,8 @@ vueJs = FrameWork(user_id=1,
                   name="VueJs",
                   description="The ProgressiveJavaScript Framework",
                   website="https://vuejs.org/",
-                  language=javascript
+                  language=javascript,
+                  icon="devicon-vuejs-plain colored"
                   )
 
 session.add(vueJs)
@@ -102,7 +103,8 @@ ror = FrameWork(user_id=1,
                 name="Ruby on Rails",
                 description="Imagine what you could build if you learned Ruby on Rails",
                 website="https://rubyonrails.org/",
-                language=ruby
+                language=ruby,
+                icon="devicon-rails-plain colored"
                 )
 
 session.add(ror)
