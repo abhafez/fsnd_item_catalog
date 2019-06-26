@@ -18,6 +18,7 @@
         <img width="200" src="https://www.shareicon.net/download/2015/09/10/98905_fork.svg">
       </div>
       <a class="item" href="{{url_for('hello')}}">Home</a>
+      <a class="item teal" href="{{url_for('newFrameWork',language_id = language.id)}}">Add New</a>
       <div class="right menu">
         {% if login_session.username %}
         <div class="item">
@@ -32,7 +33,9 @@
   </header>
   <main>
     <div class="ui container">
-      <h1 class="ui header"><i class={{language.icon}}></i> &nbsp; {{language.name}} frameworks and libraries</h1>
+      <h1 class="ui header">
+        <i class={{language.icon}}></i>
+        &nbsp; {{language.name}} frameworks and libraries</h1>
       {% with messages = get_flashed_messages() %}
       {% if messages %}
       <ul>
@@ -52,6 +55,9 @@
                   <i class={{i.icon}}></i>
                   &nbsp;{{i.name}}
                 </div>
+                {% if i.user_id == login_session['user_id']%}
+                <a class="ui red right ribbon label">Created By You</a>
+                {% endif %}
                 <div class="meta">
                   {{i.name}}
                 </div>
@@ -63,8 +69,14 @@
               {% if i.user_id == login_session['user_id']%}
               <div class="extra content">
                 <div class="ui two buttons">
-                  <div class="ui basic green button">Edit</div>
-                  <div class="ui basic red button">Delete</div>
+                  <div class="ui basic green button">
+                    <a href="{{url_for('editFrameWork', language_id = language.id, framework_id = i.id)}}">
+                      Edit
+                    </a>
+                  </div>
+                  <div class="ui basic red button"><a
+                      href="{{url_for('deleteFrameWork', language_id = language.id, framework_id = i.id)}}">Delete</a>
+                  </div>
                 </div>
               </div>
               {% endif %}

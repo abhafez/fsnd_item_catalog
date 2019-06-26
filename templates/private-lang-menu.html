@@ -29,17 +29,28 @@
     </div>
   </header>
   <main>
+    <div class="ui container">
     {% with messages = get_flashed_messages() %}
     {% if messages %}
     <ul>
       {% for message in messages %}
-      <li><strong>{{message}}</strong></li>
+      <div class="ui ordered steps">
+        <div class="completed step">
+          <div class="content">
+            <div class="title">successful</div>
+            <div class="description">{{message}}</div>
+          </div>
+        </div>
+      </div>
       {% endfor %}
     </ul>
     {% endif %}
     {% endwith %}
-    <div class="ui container">
       <div class="ui basic segment">
+        <div class="ui secondary inverted segment">
+          <p>View the famous frameworks and libraries</p>
+          <p>You can add your library or framework here</p>
+        </div>
         {% for i in languages %}
         <article class="content">
           <a class="header" href="{{url_for('languageFrameworksMenu', language_id = i.id)}}">

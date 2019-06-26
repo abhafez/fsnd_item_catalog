@@ -133,7 +133,7 @@ def gdisconnect():
             'Current user not connected.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
-    print('In gdisconnect access token is %s', access_token)
+    print('In gdisconnect access token is %s'), access_token
     print('User name is: ')
     print(login_session['username'])
     url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']
@@ -149,7 +149,8 @@ def gdisconnect():
         del login_session['picture']
         response = make_response(json.dumps('Successfully disconnected.'), 200)
         response.headers['Content-Type'] = 'application/json'
-        return response
+        flash("Logged out successfully")
+        return redirect('/')
     else:
         response = make_response(json.dumps(
             'Failed to revoke token for given user.', 400))
@@ -186,6 +187,7 @@ def languageFrameworksMenu(language_id):
 # add a anew framework
 @app.route('/languages/<int:language_id>/new/', methods=['GET', 'POST'])
 def newFrameWork(language_id):
+    language = session.query(Language).filter_by(id=language_id).one()
     if 'username' not in login_session:
         return redirect('/login')
     if request.method == 'POST':
@@ -201,7 +203,7 @@ def newFrameWork(language_id):
         flash("New FrameWork has been added")
         return redirect(url_for('languageMenu', language_id=language_id, login_session=login_session))
     else:
-        return render_template('newFrameWork.html', language_id=language_id, login_session=login_session)
+        return render_template('newFrameWork.html', language_id=language_id, login_session=login_session, language_name=language.name)
 
 # edit a framework
 @app.route('/languages/<int:language_id>/<int:framework_id>/edit/', methods=['GET', 'POST'])

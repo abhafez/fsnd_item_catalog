@@ -25,31 +25,73 @@
 </head>
 
 <body>
+  <header>
+    <div class="ui stackable menu">
+      <div class="item">
+        <img width="200" src="https://www.shareicon.net/download/2015/09/10/98905_fork.svg">
+      </div>
+      <a class="item" href="{{url_for('hello')}}">Home</a>
+      <div class="right menu">
+        {% if login_session.username %}
+        <div class="item">
+          Welcome, {{login_session.username}}
+        </div>
+        <a class="item" href="{{url_for('gdisconnect')}}">Logout</a>
+        {% else %}
+        <a class="item" href="{{url_for('showLogin')}}">Login</a>
+        {% endif %}
+      </div>
+    </div>
+  </header>
   <div class="ui hidden divider"></div>
   <div class="ui hidden divider"></div>
-  <div class="ui piled segment">
-    <h1> New Framework </h1>
+  <div class="ui container">
+    <h1> New {{language_name}} Framework</h1>
 
     <form action="{{url_for('newFrameWork', language_id=language_id )}}" method='POST'>
 
       <div class="ui input">
-        <label for="name">Framework name: </label>
-        <input type='text' id="name" size='30' name='name' placeholder="Framework name">
+        <label for="name">Framework name: (*required)</label>
+        <input type='text' id="name" size='30' name='name' placeholder="Framework name" required>
       </div>
+      <div class="ui hidden divider"></div>
       <div class="ui input">
         <label for="description">Description</label>
-        <input size='150' name='description' placeholder="Description">
+        <input size='150' name='description' placeholder="Description" id='description'>
       </div>
+      <div class="ui hidden divider"></div>
       <div class="ui input">
         <label for="website">Official website</label>
         <input type='text' size='30' name='website' placeholder="Official website">
       </div>
 
-      <input type='submit' value='Add'>
+      <div class="ui basic segment">
+        <input type='submit' value='Add' id="submit">
+        &nbsp;&nbsp;
+        <a href="{{url_for('languageMenu')}}">Cancel</a>
+      </div>
 
     </form>
   </div>
 
 </body>
+<script>
+  const name = document.getElementById('name');
+  const description = document.getElementById('description');
+  const submitButton = document.getElementById('submit');
+
+  if (name.innerText.length <= 0) {
+    submitButton.setAttribute("disabled", true);
+  }
+
+  name.addEventListener('input', function (evt) {
+    if (evt.target.value.length > 0) {
+      submitButton.removeAttribute('disabled');
+    } else {
+      submitButton.setAttribute("disabled", true);
+    }
+  });
+
+</script>
 
 </html>
