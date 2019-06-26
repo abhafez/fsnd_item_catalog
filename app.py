@@ -292,7 +292,6 @@ def deleteFrameWork(language_id, framework_id):
             return redirect(url_for('languageMenu', language_id=language_id))
         else:
             flash("you are now eligible to delete this framework")
-            failure_message = "Faliure"
             return redirect(url_for('languageMenu', language_id=language_id,))
     else:
         return render_template('deleteFramework.html', item=framework_to_delete)
