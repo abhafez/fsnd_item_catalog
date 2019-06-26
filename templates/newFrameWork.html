@@ -32,11 +32,20 @@
 
     <form action="{{url_for('newFrameWork', language_id=language_id )}}" method='POST'>
 
-      <p>Name:</p>
+      <div class="ui input">
+        <label for="name">Framework name: </label>
+        <input type='text' id="name" size='30' name='name' placeholder="Framework name">
+      </div>
+      <div class="ui input">
+        <label for="description">Description</label>
+        <input size='150' name='description' placeholder="Description">
+      </div>
+      <div class="ui input">
+        <label for="website">Official website</label>
+        <input type='text' size='30' name='website' placeholder="Official website">
+      </div>
 
-      <input type='text' size='30' name='name'>
-
-      <input type='submit' value='Create'>
+      <input type='submit' value='Add'>
 
     </form>
   </div>

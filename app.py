@@ -178,7 +178,7 @@ def languageFrameworksMenu(language_id):
     language = session.query(Language).filter_by(id=language_id).one()
     frameworks = session.query(FrameWork).filter_by(language_id=language.id)
     creator = getUserInfo(language.user_id)
-    if 'username' not in login_session or creator.id != login_session['user_id']:
+    if 'username' not in login_session:
         return render_template('public-frameworks-list.html', language=language, frameworks=frameworks, creator=creator,  login_session=login_session)
     else:
         return render_template('private-frameworks-list.html', language=language, frameworks=frameworks, creator=creator, login_session=login_session)
@@ -190,13 +190,18 @@ def newFrameWork(language_id):
         return redirect('/login')
     if request.method == 'POST':
         framework = FrameWork(
-            name=request.form['name'], language_id=language_id, user_id=login_session['user_id'])
+            name=request.form['name'],
+            description=request.form['description'],
+            website=request.form['website'],
+            language_id=language_id,
+            user_id=login_session['user_id']
+        )
         session.add(framework)
         session.commit()
         flash("New FrameWork has been added")
-        return redirect(url_for('languageMenu', language_id=language_id))
+        return redirect(url_for('languageMenu', language_id=language_id, login_session=login_session))
     else:
-        return render_template('newFrameWork.html', language_id=language_id)
+        return render_template('newFrameWork.html', language_id=language_id, login_session=login_session)
 
 # edit a framework
 @app.route('/languages/<int:language_id>/<int:framework_id>/edit/', methods=['GET', 'POST'])
@@ -204,19 +209,25 @@ def editFrameWork(language_id, framework_id):
     editedFramework = session.query(FrameWork).filter_by(id=framework_id).one()
     if 'username' not in login_session:
         return redirect('/login')
-    if request.method == 'POST':
-        if request.form['name']:
-            editedFramework.name = request.form['name']
-        if request.form['description']:
-            editedFramework.description = request.form['description']
-        if request.form['website']:
-            editedFramework.website = request.form['website']
-        session.add(editedFramework)
-        session.commit()
-        flash("New FrameWork has been Edited")
-        return redirect(url_for('languageMenu', language_id=language_id, login_session=login_session))
     else:
-        return render_template('editFramework.html', language_id=language_id, framework_id=framework_id, item=editedFramework)
+        print(editedFramework.user_id)
+    if editedFramework.user_id == login_session['user_id']:
+        if request.method == 'POST':
+            if request.form['name']:
+                editedFramework.name = request.form['name']
+            if request.form['description']:
+                editedFramework.description = request.form['description']
+            if request.form['website']:
+                editedFramework.website = request.form['website']
+            session.add(editedFramework)
+            session.commit()
+            flash("New FrameWork has been Edited")
+            return redirect(url_for('languageMenu', language_id=language_id, login_session=login_session))
+        else:
+            return render_template('editFramework.html', language_id=language_id, framework_id=framework_id, item=editedFramework, login_session=login_session)
+    else:
+        flash("You didn't create this framework .. you can't edit it")
+        return redirect(url_for('languageMenu', language_id=language_id, login_session=login_session))
 
 # delete a framework
 @app.route('/languages/<int:language_id>/<int:framework_id>/delete/', methods=['GET', 'POST'])

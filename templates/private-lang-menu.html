@@ -38,12 +38,10 @@
     </ul>
     {% endif %}
     {% endwith %}
-    <!-- NOTE: -->
-    <h1 class="ui header">I should be {Private} lang-menu</h1>
     <div class="ui container">
       <div class="ui basic segment">
         {% for i in languages %}
-        <article class="content" >
+        <article class="content">
           <a class="header" href="{{url_for('languageFrameworksMenu', language_id = i.id)}}">
             <h2 class="ui header" style="margin: 1em;">
               <i class={{i.icon}} id="ico" style="width: 100px;"></i>&nbsp;{{i.name}}

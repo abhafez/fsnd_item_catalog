@@ -3,8 +3,6 @@ from sqlalchemy.orm import sessionmaker
 
 from database_setup import Language, Base, FrameWork, User
 
-# engine = create_engine('sqlite:///frameworksmenu.db')
-# engine = create_engine('sqlite:///frameworksmenuwithusers.db')
 engine = create_engine('sqlite:///lang-db.db')
 
 Base.metadata.bind = engine

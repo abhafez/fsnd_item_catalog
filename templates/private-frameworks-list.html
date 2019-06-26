@@ -32,7 +32,6 @@
   </header>
   <main>
     <div class="ui container">
-      <h1 class="ui header">NOTE: I should be {private} Here /?MENU ??</h1><!-- FIXME: Delete this line before submit -->
       <h1 class="ui header"><i class={{language.icon}}></i> &nbsp; {{language.name}} frameworks and libraries</h1>
       {% with messages = get_flashed_messages() %}
       {% if messages %}
@@ -61,6 +60,14 @@
                 </div>
                 <div>{{i.website}}</div>
               </div>
+              {% if i.user_id == login_session['user_id']%}
+              <div class="extra content">
+                <div class="ui two buttons">
+                  <div class="ui basic green button">Edit</div>
+                  <div class="ui basic red button">Delete</div>
+                </div>
+              </div>
+              {% endif %}
             </div>
           </div>
         </div>

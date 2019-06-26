@@ -10,6 +10,24 @@
 </head>
 
 <body>
+  <header>
+    <div class="ui stackable menu">
+      <div class="item">
+        <img width="200" src="https://www.shareicon.net/download/2015/09/10/98905_fork.svg">
+      </div>
+      <a class="item" href="{{url_for('hello')}}">Home</a>
+      <div class="right menu">
+        {% if login_session.username %}
+        <div class="item">
+          Welcome, {{login_session.username}}
+        </div>
+        <a class="item" href="{{url_for('gdisconnect')}}">Logout</a>
+        {% else %}
+        <a class="item" href="{{url_for('showLogin')}}">Login</a>
+        {% endif %}
+      </div>
+    </div>
+  </header>
   <div class="ui hidden divider"></div>
   <div class="ui hidden divider"></div>
   <div class="ui piled segment">
