@@ -40,7 +40,11 @@ def showLogin():
                     for x in range(32))
     login_session['state'] = state
     # return "The current session state is %s" % login_session['state']
-    return render_template('login.html', STATE=state, login_session=login_session)
+    return render_template(
+        'login.html',
+        STATE=state,
+        login_session=login_session
+    )
 
 
 @app.route('/gconnect', methods=['POST'])
@@ -96,8 +100,8 @@ def gconnect():
     stored_access_token = login_session.get('access_token')
     stored_gplus_id = login_session.get('gplus_id')
     if stored_access_token is not None and gplus_id == stored_gplus_id:
-        response = make_response(json.dumps('Current user is already connected.'),
-                                 200)
+        response = make_response(
+            json.dumps('Current user is already connected.'), 200)
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -150,6 +154,7 @@ def gdisconnect():
     print('In gdisconnect access token is %s'), access_token
     print('User name is: ')
     print(login_session['username'])
+    # NOQA
     url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
@@ -166,8 +171,9 @@ def gdisconnect():
         flash("Logged out successfully")
         return redirect('/')
     else:
-        response = make_response(json.dumps(
-            'Failed to revoke token for given user.', 400))
+        response = make_response(
+            json.dumps('Failed to revoke token for given user.', 400)
+        )
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -236,25 +242,33 @@ def newFrameWork(language_id):
                                 login_session=login_session)
                         )
     else:
-        return render_template('newFrameWork.html', language_id=language_id, login_session=login_session, language_name=language.name)
+        return render_template('newFrameWork.html',
+                               language_id=language_id,
+                               login_session=login_session,
+                               language_name=language.name
+                               )
 
 # edit a framework
-@app.route('/languages/<int:language_id>/<int:framework_id>/edit/', methods=['GET', 'POST'])
+
+
+@app.route('/languages/<int:language_id>/<int:framework_id>/edit/',
+           methods=['GET', 'POST']
+           )
 def editFrameWork(language_id, framework_id):
-    editedFramework = session.query(FrameWork).filter_by(id=framework_id).one()
+    editFramework = session.query(FrameWork).filter_by(id=framework_id).one()
     if 'username' not in login_session:
         return redirect('/login')
     else:
-        print(editedFramework.user_id)
-    if editedFramework.user_id == login_session['user_id']:
+        print(editFramework.user_id)
+    if editFramework.user_id == login_session['user_id']:
         if request.method == 'POST':
             if request.form['name']:
-                editedFramework.name = request.form['name']
+                editFramework.name = request.form['name']
             if request.form['description']:
-                editedFramework.description = request.form['description']
+                editFramework.description = request.form['description']
             if request.form['website']:
-                editedFramework.website = request.form['website']
-            session.add(editedFramework)
+                editFramework.website = request.form['website']
+            session.add(editFramework)
             session.commit()
             flash("New FrameWork has been Edited")
             return redirect(url_for('languageMenu',
@@ -265,7 +279,7 @@ def editFrameWork(language_id, framework_id):
             return render_template('editFramework.html',
                                    language_id=language_id,
                                    framework_id=framework_id,
-                                   item=editedFramework,
+                                   item=editFramework,
                                    login_session=login_session
                                    )
     else:
@@ -292,9 +306,13 @@ def deleteFrameWork(language_id, framework_id):
             return redirect(url_for('languageMenu', language_id=language_id))
         else:
             flash("you are now eligible to delete this framework")
-            return redirect(url_for('languageMenu', language_id=language_id,))
+            return redirect(url_for('languageMenu',
+                                    language_id=language_id,)
+                            )
     else:
-        return render_template('deleteFramework.html', item=framework_to_delete)
+        return render_template('deleteFramework.html',
+                               item=framework_to_delete
+                               )
 
 
 def createUser(login_session):
