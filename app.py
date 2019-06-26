@@ -1,7 +1,16 @@
 from database_setup import Base, Language, FrameWork, User
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, make_response
+from flask import (
+    Flask,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    flash,
+    jsonify,
+    make_response
+)
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 import httplib2
@@ -118,7 +127,12 @@ def gconnect():
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 100px; height: 100px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += ' " style = "width: 100px;' \
+        'height: 100px;' \
+        'border-radius: 150px;' \
+        '-webkit-border-radius: 150px;' \
+        '-moz-border-radius: 150px;"> '
+
     flash("you are now logged in as %s" % login_session['username'])
     print("done!")
     return output
@@ -168,9 +182,15 @@ def languageMenu():
     languages = session.query(Language).order_by((Language.name))
     # frameworks = session.query(FrameWork).filter_by(language_id=language.id)
     if 'username' not in login_session:
-        return render_template('public-lang-menu.html', languages=languages, login_session=login_session)
+        return render_template('public-lang-menu.html',
+                               languages=languages,
+                               login_session=login_session
+                               )
     else:
-        return render_template('private-lang-menu.html', languages=languages, login_session=login_session)
+        return render_template('private-lang-menu.html',
+                               languages=languages,
+                               login_session=login_session
+                               )
 
 
 @app.route('/languages/<int:language_id>/')
@@ -180,9 +200,19 @@ def languageFrameworksMenu(language_id):
     frameworks = session.query(FrameWork).filter_by(language_id=language.id)
     creator = getUserInfo(language.user_id)
     if 'username' not in login_session:
-        return render_template('public-frameworks-list.html', language=language, frameworks=frameworks, creator=creator,  login_session=login_session)
+        return render_template('public-frameworks-list.html',
+                               language=language,
+                               frameworks=frameworks,
+                               creator=creator,
+                               login_session=login_session
+                               )
     else:
-        return render_template('private-frameworks-list.html', language=language, frameworks=frameworks, creator=creator, login_session=login_session)
+        return render_template('private-frameworks-list.html',
+                               language=language,
+                               frameworks=frameworks,
+                               creator=creator,
+                               login_session=login_session
+                               )
 
 # add a anew framework
 @app.route('/languages/<int:language_id>/new/', methods=['GET', 'POST'])
@@ -201,7 +231,10 @@ def newFrameWork(language_id):
         session.add(framework)
         session.commit()
         flash("New FrameWork has been added")
-        return redirect(url_for('languageMenu', language_id=language_id, login_session=login_session))
+        return redirect(url_for('languageMenu',
+                                language_id=language_id,
+                                login_session=login_session)
+                        )
     else:
         return render_template('newFrameWork.html', language_id=language_id, login_session=login_session, language_name=language.name)
 
@@ -224,15 +257,27 @@ def editFrameWork(language_id, framework_id):
             session.add(editedFramework)
             session.commit()
             flash("New FrameWork has been Edited")
-            return redirect(url_for('languageMenu', language_id=language_id, login_session=login_session))
+            return redirect(url_for('languageMenu',
+                                    language_id=language_id,
+                                    login_session=login_session)
+                            )
         else:
-            return render_template('editFramework.html', language_id=language_id, framework_id=framework_id, item=editedFramework, login_session=login_session)
+            return render_template('editFramework.html',
+                                   language_id=language_id,
+                                   framework_id=framework_id,
+                                   item=editedFramework,
+                                   login_session=login_session
+                                   )
     else:
         flash("You didn't create this framework .. you can't edit it")
-        return redirect(url_for('languageMenu', language_id=language_id, login_session=login_session))
+        return redirect(url_for('languageMenu',
+                                language_id=language_id,
+                                login_session=login_session)
+                        )
 
 # delete a framework
-@app.route('/languages/<int:language_id>/<int:framework_id>/delete/', methods=['GET', 'POST'])
+@app.route('/languages/<int:language_id>/<int:framework_id>/delete/',
+methods=['GET', 'POST'])
 def deleteFrameWork(language_id, framework_id):
     framework_to_delete = session.query(
         FrameWork).filter_by(id=framework_id).one()
