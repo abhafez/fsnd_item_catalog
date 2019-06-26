@@ -167,9 +167,9 @@ def languageMenu():
     languages = session.query(Language).order_by((Language.name))
     # frameworks = session.query(FrameWork).filter_by(language_id=language.id)
     if 'username' not in login_session:
-        return render_template('public-lang-menu.html', languages=languages)
+        return render_template('public-lang-menu.html', languages=languages, login_session=login_session)
     else:
-        return render_template('private-lang-menu.html', languages=languages)
+        return render_template('private-lang-menu.html', languages=languages, login_session=login_session)
 
 
 @app.route('/languages/<int:language_id>/')
@@ -179,9 +179,9 @@ def languageFrameworksMenu(language_id):
     frameworks = session.query(FrameWork).filter_by(language_id=language.id)
     creator = getUserInfo(language.user_id)
     if 'username' not in login_session or creator.id != login_session['user_id']:
-        return render_template('publicMenu.html', language=language, frameworks=frameworks, creator=creator,  login_session=login_session)
+        return render_template('public-frameworks-list.html', language=language, frameworks=frameworks, creator=creator,  login_session=login_session)
     else:
-        return render_template('languageFrameworksMenu.html', language=language, frameworks=frameworks, creator=creator)
+        return render_template('private-frameworks-list.html', language=language, frameworks=frameworks, creator=creator, login_session=login_session)
 
 # add a anew framework
 @app.route('/languages/<int:language_id>/new/', methods=['GET', 'POST'])
@@ -207,6 +207,10 @@ def editFrameWork(language_id, framework_id):
     if request.method == 'POST':
         if request.form['name']:
             editedFramework.name = request.form['name']
+        if request.form['description']:
+            editedFramework.description = request.form['description']
+        if request.form['website']:
+            editedFramework.website = request.form['website']
         session.add(editedFramework)
         session.commit()
         flash("New FrameWork has been Edited")

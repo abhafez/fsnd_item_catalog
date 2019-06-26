@@ -15,8 +15,18 @@
   <div class="ui piled segment">
     <form action="{{url_for('editFrameWork', language_id = language_id, framework_id=item.id)}}" method='POST'>
 
-      <p>Name:</p>
-      <input type='text' size='30' name='name' placeholder="{{item.name}}">
+      <div class="ui input">
+        <label for="name">Framework name: </label>
+        <input type='text' id="name" size='30' name='name' placeholder="{{item.name}}">
+      </div>
+      <div class="ui input">
+        <label for="description">Description</label>
+        <input size='150' name='description' placeholder="{{item.description}}">
+      </div>
+      <div class="ui input">
+        <label for="website">Official website</label>
+        <input type='text' size='30' name='website' placeholder="{{item.website}}">
+      </div>
 
       <input type='submit' value='Edit'>
     </form>

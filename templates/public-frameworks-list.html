@@ -1,3 +1,5 @@
+<html>
+
 <head>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css')}}">
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='semantic.min.css')}}">
@@ -29,30 +31,41 @@
     </div>
   </header>
   <main>
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <ul>
-      {% for message in messages %}
-      <li><strong>{{message}}</strong></li>
-      {% endfor %}
-    </ul>
-    {% endif %}
-    {% endwith %}
-    <!-- NOTE: -->
-    <h1 class="ui header">I should be {Private} lang-menu</h1>
     <div class="ui container">
-      <div class="ui basic segment">
-        {% for i in languages %}
-        <article class="content" >
-          <a class="header" href="{{url_for('languageFrameworksMenu', language_id = i.id)}}">
-            <h2 class="ui header" style="margin: 1em;">
-              <i class={{i.icon}} id="ico" style="width: 100px;"></i>&nbsp;{{i.name}}
-            </h2>
-          </a>
-        </article>
+      <h1 class="ui header">NOTE: I should be {public} Here /?MENU ??</h1><!-- FIXME: Delete this line before submit -->
+      <h1 class="ui header"><i class={{language.icon}}></i> &nbsp; {{language.name}} frameworks and libraries</h1>
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+      <ul>
+        {% for message in messages %}
+        <li><strong>{{message}}</strong></li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      {% endwith %}
+      <div class="ui grid padded">
+        {% for i in frameworks %}
+        <div class="eight wide row">
+          <div class="ui cards">
+            <div class="card">
+              <div class="content">
+                <div class="header">
+                  <i class={{i.icon}}></i>
+                  &nbsp;{{i.name}}
+                </div>
+                <div class="meta">
+                  {{i.name}}
+                </div>
+                <div class="description">
+                  {{i.description}}
+                </div>
+                <div>{{i.website}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
         {% endfor %}
       </div>
-    </div>
     </div>
   </main>
 </body>

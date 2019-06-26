@@ -1,28 +1,60 @@
-<html>
-<link rel="stylesheet"
-  href="https://cdn.rawgit.com/konpa/devicon/df6431e323547add1b4cf45992913f15286456d3/devicon.min.css">
-
+<head>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css')}}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='semantic.min.css')}}">
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+  <script src="{{ url_for('static', filename='semantic.min.js')}}"></script>
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+  <link rel="stylesheet"
+    href="https://cdn.rawgit.com/konpa/devicon/df6431e323547add1b4cf45992913f15286456d3/devicon.min.css">
+</head>
 
 <body>
-  {% with messages = get_flashed_messages() %}
-  {% if messages %}
-  <ul>
-    {% for message in messages %}
-    <li><strong>{{message}}</strong></li>
-    {% endfor %}
-  </ul>
-  {% endif %}
-  {% endwith %}
-  <!-- NOTE: -->
-  <h1 class="ui header">I should be {public} lang-menu</h1>
-  {% for i in languages %}
-
-  <div>
-    <a href="{{url_for('languageFrameworksMenu', language_id = i.id)}}">
-      <h1 class="ui header"><i class={{i.icon}}></i>{{i.name}}</h1>
-    </a>
-  </div>
-  {% endfor %}
+  <header>
+    <div class="ui stackable menu">
+      <div class="item">
+        <img width="200" src="https://www.shareicon.net/download/2015/09/10/98905_fork.svg">
+      </div>
+      <a class="item" href="{{url_for('hello')}}">Home</a>
+      <div class="right menu">
+        {% if login_session.username %}
+        <div class="item">
+          Welcome, {{login_session.username}}
+        </div>
+        <a class="item" href="{{url_for('gdisconnect')}}">Logout</a>
+        {% else %}
+        <a class="item" href="{{url_for('showLogin')}}">Login</a>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+  <main>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+      {% for message in messages %}
+      <li><strong>{{message}}</strong></li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+    <!-- NOTE: -->
+    <h1 class="ui header">I should be {Public} lang-menu</h1>
+    <div class="ui container">
+      <div class="ui basic segment">
+        {% for i in languages %}
+        <article class="content" >
+          <a class="header" href="{{url_for('languageFrameworksMenu', language_id = i.id)}}">
+            <h2 class="ui header" style="margin: 1em;">
+              <i class={{i.icon}} id="ico" style="width: 100px;"></i>&nbsp;{{i.name}}
+            </h2>
+          </a>
+        </article>
+        {% endfor %}
+      </div>
+    </div>
+    </div>
+  </main>
 </body>
 
 </html>
