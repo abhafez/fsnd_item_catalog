@@ -277,17 +277,23 @@ def editFrameWork(language_id, framework_id):
 
 # delete a framework
 @app.route('/languages/<int:language_id>/<int:framework_id>/delete/',
-methods=['GET', 'POST'])
+           methods=['GET', 'POST'])
 def deleteFrameWork(language_id, framework_id):
     framework_to_delete = session.query(
         FrameWork).filter_by(id=framework_id).one()
     if 'username' not in login_session:
         return redirect('/login')
     if request.method == 'POST':
-        session.delete(framework_to_delete)
-        session.commit()
-        flash("A frameWork has been deleted")
-        return redirect(url_for('languageMenu', language_id=language_id))
+        print(login_session)
+        if framework_to_delete.user_id == login_session['user_id']:
+            session.delete(framework_to_delete)
+            session.commit()
+            flash("A frameWork has been deleted")
+            return redirect(url_for('languageMenu', language_id=language_id))
+        else:
+            flash("you are now eligible to delete this framework")
+            failure_message = "Faliure"
+            return redirect(url_for('languageMenu', language_id=language_id,))
     else:
         return render_template('deleteFramework.html', item=framework_to_delete)
 
