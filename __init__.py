@@ -23,12 +23,16 @@ import random
 import string
 app = Flask(__name__)
 
-CLIENT_ID = json.loads(
-    open('client_secrets.json', 'r').read())['web']['client_id']
+
+client_secret = '/var/www/FlaskApp/FlaskApp/client_secrets.json'
+
+CLIENT_ID = json.loads(open(client_secret, 'r').read())['web']['client_id']
 APPLICATION_NAME = "Frameworks List Application"
 
-engine = create_engine('sqlite:///lang-db.db',
-                       connect_args={'check_same_thread': False})
+
+db_url = 'postgresql://postgres:anaconda@localhost/frameworks'
+engine = create_engine(db_url)
+print(engine)
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
@@ -59,7 +63,7 @@ def gconnect():
     try:
         # Upgrade the authorization code into a credentials object
         print('catch it')
-        oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
+        oauth_flow = flow_from_clientsecrets(client_secret, scope='')
         oauth_flow.redirect_uri = 'postmessage'
         print('catch it after authflow')
         credentials = oauth_flow.step2_exchange(code)
@@ -202,7 +206,7 @@ def languageMenu():
 @app.route('/languages/<int:language_id>/')
 @app.route('/languages/<int:language_id>/frameworks')
 def languageFrameworksMenu(language_id):
-    language = session.query(Language).filter_by(id=language_id).one()
+    language = session.query(Language).filter_by(id=language_id).first()
     frameworks = session.query(FrameWork).filter_by(language_id=language.id)
     creator = getUserInfo(language.user_id)
     if 'username' not in login_session:
@@ -353,5 +357,4 @@ def FrameworkJSON(language_id, framework_id):
 
 if __name__ == '__main__':
     app.secret_key = 'anaconda'  # a big python :D
-    app.debug = True
     app.run=()

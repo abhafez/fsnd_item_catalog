@@ -3,7 +3,9 @@ from sqlalchemy.orm import sessionmaker
 
 from database_setup import Language, Base, FrameWork, User
 
-engine = create_engine('sqlite:///lang-db.db')
+
+db_url = 'postgresql://postgres:anaconda@localhost/frameworks'
+engine = create_engine(db_url)
 
 Base.metadata.bind = engine
 
@@ -12,7 +14,7 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 # Lang-Python
-python = Language(user_id=2, name="Python", icon="devicon-python-plain-wordmark colored")
+python = Language(user_id=1, name="Python", icon="devicon-python-plain-wordmark colored")
 
 session.add(python)
 session.commit()
@@ -66,17 +68,6 @@ react = FrameWork(user_id=1,
 session.add(react)
 session.commit()
 
-# FW-angular
-angular = FrameWork(user_id=1,
-                    name="Angular",
-                    description="Build features quickly with simple, declarative templates. Extend the template language with your own components and use a wide array of existing components. Get immediate Angular-specific help and feedback with nearly every IDE and editor. All this comes together so you can focus on building amazing apps rather than trying to make the code work.",
-                    website="https://angular.io/",
-                    language=javascript,
-                    icon="devicon-angularjs-plain colored"
-                    )
-
-session.add(angular)
-session.commit()
 
 # FW-vuejs
 vueJs = FrameWork(user_id=1,
@@ -138,3 +129,4 @@ session.add(phoenix)
 session.commit()
 
 print("Added FrameWorks to DB")
+

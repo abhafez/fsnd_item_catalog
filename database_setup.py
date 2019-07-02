@@ -7,9 +7,8 @@ from sqlalchemy import create_engine
 
 Base = declarative_base()
 
-
 class User(Base):
-    __tablename__ = 'user'
+    __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
@@ -23,7 +22,7 @@ class Language(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
     icon = Column(String(250), nullable=True)
-    user_id = Column(Integer, ForeignKey('user.id'))
+    user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship(User)
 
     @property
@@ -44,7 +43,7 @@ class FrameWork(Base):
     icon = Column(String(250), nullable=True)
     language_id = Column(Integer, ForeignKey('language.id'))
     language = relationship(Language)
-    user_id = Column(Integer, ForeignKey('user.id'))
+    user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship(User)
 
     @property
@@ -59,6 +58,8 @@ class FrameWork(Base):
 
 # engine = create_engine('sqlite:///frameworksmenu.db')
 # engine = create_engine('sqlite:///frameworksmenuwithusers.db')
-engine = create_engine('sqlite:///lang-db.db')
+db_url = 'postgresql://postgres:anaconda@localhost/frameworks'
+engine = create_engine(db_url)
+
 
 Base.metadata.create_all(engine)
